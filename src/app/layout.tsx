@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import WelcomeModal from "./components/WelcomeModal";
 import { CartProvider } from "./context/CartContext";
 
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
@@ -22,7 +21,6 @@ export default function RootLayout({
       <body className={`${inter.className} min-h-screen antialiased`} style={{ backgroundColor: 'var(--color-bg)', color: 'var(--color-text)' }}>
         <CartProvider>
           <Navbar />
-          <WelcomeModal />
           <main className="pt-20">
             {children}
           </main>

@@ -24,12 +24,19 @@ type CartContextType = {
   updateQuantity: (productId: number, quantity: number) => void;
   cartCount: number;
   cartTotal: number;
+
+  // ✅ ADD THESE (this was missing)
+  isCartOpen: boolean;
+  setIsCartOpen: (value: boolean) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
+
+  // ✅ ADD THIS STATE
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Load from local storage
   useEffect(() => {
@@ -69,16 +76,38 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = (productId: number, quantity: number) => {
     setCart((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity: Math.max(1, quantity) } : item
+        item.product.id === productId
+          ? { ...item, quantity: Math.max(1, quantity) }
+          : item
       )
     );
   };
 
   const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const cartTotal = cart.reduce((acc, item) => acc + (parseInt(item.product.price.replace(/[^\d]/g, ''), 10) * item.quantity), 0);
+
+  const cartTotal = cart.reduce(
+    (acc, item) =>
+      acc +
+      (parseInt(item.product.price.replace(/[^\d]/g, ""), 10) *
+        item.quantity),
+    0
+  );
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity, cartCount, cartTotal }}>
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        cartCount,
+        cartTotal,
+
+        // ✅ ADD THESE
+        isCartOpen,
+        setIsCartOpen,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
